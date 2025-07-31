@@ -1,0 +1,3589 @@
+<ButtonCustom>:
+    orientation: 'vertical'
+    size_hint: 0.45, None
+    height: dp(140)
+    padding: dp(4)
+    spacing: dp(2)
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+
+    Image:
+        source: root.img_source
+        size_hint_y: 0.7
+        allow_stretch: True
+        keep_ratio: True
+
+    Label:
+        text: root.text_label
+        font_size: dp(26)
+        font_name: 'fonts/NekaLaurent.ttf'
+        color: 0.2, 0.2, 0.2, 1
+        halign: 'center'
+        valign: 'middle'
+        text_size: self.size
+
+<LogoImage@Image>:
+    allow_stretch: True
+    keep_ratio: True
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1  # Cor de fundo (opcional)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(20)]  # Ajuste o valor para controlar o arredondamento
+
+<ButtonCustomCalculadora>:
+    size_hint: 1, None
+    height: dp(90)
+    padding: [dp(4), dp(8), dp(4), dp(8)]     # espaçamento padding: [esquerda, topo, direita, baixo]
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1  # Cor de fundo branca do botão
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [25]
+
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: dp(2)  # Espaçamento entre a Imagem e o Label (parece bom)
+
+        Image:
+            source: root.img_source
+            size_hint_x: 0.45
+            allow_stretch: True
+            keep_ratio: True  # Mantém a proporção da imagem
+
+        Label:
+            text: root.text_label
+            font_size: dp(18)
+            font_name: 'fonts/NekaLaurent.ttf'
+            color: 0.2, 0.2, 0.2, 1
+            halign: 'left'
+            valign: 'middle'
+            # Garante que o texto use a largura do Label para quebrar corretamente
+            text_size: self.width, None
+            # Aumentado o size_hint_x para o Label ter mais espaço horizontal
+            size_hint_x: 0.55
+            # A soma dos size_hint_x (0.40 + 0.55 = 0.95) deixa um pequeno espaço
+            # que o BoxLayout gerencia. Você pode ajustá-los para somar 1.0 se preferir (ex: 0.4 e 0.6).
+
+<ToggleButtonCustom@ToggleButton>:
+    font_size: '16sp'
+    color: (0.2, 0.5, 0.8, 1) if self.state == 'normal' else (1, 1, 1, 1)  # Texto azul no normal, branco no pressionado
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 1) if self.state == 'normal' else (0.2, 0.5, 0.8, 1)  # Fundo branco no normal, azul no pressionado
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [12]
+        Color:
+            rgba: 0.2, 0.5, 0.8, 1  # Contorno azul (sempre azul forte)
+        Line:
+            width: 2
+            rounded_rectangle: (self.x, self.y, self.width, self.height, 12)
+
+<ButtonSimbologia@Button>:
+    img_source: ''
+    text_label: ''
+    explanation_text: ''
+    size_hint: 1, None
+    height: dp(90)
+    background_normal: ''
+    background_color: 0, 0, 0, 0
+    on_release: app.root.get_screen('SimbologiadeSoldagem').show_explanatory_box(self.text_label, self.explanation_text_before_image)
+
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [25]
+
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: dp(2)
+
+        Image:
+            source: root.img_source
+            size_hint_x: 0.45
+            allow_stretch: True
+            keep_ratio: True
+
+        Label:
+            text: root.text_label
+            font_size: dp(14)
+            font_name: 'fonts/NekaLaurent.ttf'
+            color: 0.2, 0.2, 0.2, 1
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_x: 0.55
+
+<ExplanatoryBox@FloatLayout>:
+    explanation_title: ""
+    explanation_text_before_image: ""
+    explanation_text_between_images: ""
+    explanation_text_after_additional_image: ""
+    explanation_image_path: ""
+    additional_image_path: ""
+
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0.6
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    on_touch_down:
+        if not self.ids.popup_box.collide_point(*args[1].pos): root.parent.close_explanatory_box()
+
+    FloatLayout:
+        id: popup_box
+        size_hint: None, None
+        size: root.width * 0.75, dp(480)  # aumente aqui se quiser mais espaço
+        pos: (root.width - self.width) / 2, (root.height - self.height) / 2
+
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1
+            RoundedRectangle:
+                pos: self.pos[0] - dp(1.5), self.pos[1] - dp(1.5)
+                size: self.size[0] + dp(3), self.size[1] + dp(3)
+                radius: [dp(15)]
+            Color:
+                rgba: 1, 1, 1, 1
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(15)]
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(12)
+            spacing: dp(10)
+            size_hint: 1, 1  # ocupa 100% da popup_box
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+            ScrollView:
+                size_hint: 1, 1
+                do_scroll_x: False
+                do_scroll_y: True
+                bar_width: dp(6)
+
+                BoxLayout:
+                    id: scroll_content
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(8)
+                    padding: dp(10)
+
+                    Label:
+                        text: root.explanation_title
+                        font_size: '21sp'
+                        font_name: 'fonts/Roboto-Black.ttf'
+                        color: 0, 0, 0, 1
+                        size_hint_y: None
+                        height: self.texture_size[1] + dp(10)
+                        text_size: self.width, None
+                        halign: 'center'
+                        valign: 'middle'
+
+                    Label:
+                        text: root.explanation_text_before_image
+                        font_size: '16sp'
+                        color: 0, 0, 0, 1
+                        size_hint_y: None
+                        height: self.texture_size[1] + dp(10)
+                        text_size: self.width, None
+                        halign: 'center'
+                        valign: 'center'
+
+                    Image:
+                        source: root.explanation_image_path
+                        size_hint: None, None
+                        size: dp(240), dp(80)
+                        allow_stretch: True
+                        keep_ratio: True
+                        pos_hint: {'center_x': 0.5}
+
+                    Label:
+                        text: root.explanation_text_between_images
+                        font_size: '16sp'
+                        color: 0, 0, 0, 1
+                        size_hint_y: None
+                        height: self.texture_size[1] + dp(10)
+                        text_size: self.width, None
+                        halign: 'center'
+                        valign: 'center'
+
+                    Image:
+                        source: root.additional_image_path
+                        size_hint: None, None
+                        size: dp(240), dp(80)
+                        allow_stretch: True
+                        keep_ratio: True
+                        pos_hint: {'center_x': 0.5}
+
+                    Label:
+                        text: root.explanation_text_after_additional_image
+                        font_size: '16sp'
+                        color: 0, 0, 0, 1
+                        size_hint_y: None
+                        height: self.texture_size[1] + dp(10)
+                        text_size: self.width, None
+                        halign: 'center'
+                        valign: 'center'
+
+                    Button:
+                        text: "Fechar"
+                        font_size: '21sp'
+                        font_name: 'fonts/NekaLaurent.ttf'
+                        size_hint: 0.4, None
+                        height: dp(40)
+                        pos_hint: {"center_x": 0.5}
+                        background_color: 0, 0, 0, 0
+                        color: 0, 0, 0, 1
+                        on_release: root.parent.close_explanatory_box()
+
+
+<SpinnerOption@Button>:
+    background_color: 0, 0, 0, 0
+    background_normal: ""
+    background_down: ""
+    color: (0.2, 0.4, 0.9, 1)
+    font_size: dp(18)
+    height: dp(44)
+
+    canvas.before:
+        # Cor de fundo sólida (exemplo: branca)
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(10)]
+
+        # Borda preta
+        Color:
+            rgba: 0, 0, 0, 1
+        Line:
+            width: 1.2
+            rounded_rectangle: (*self.pos, *self.size, dp(10))
+
+
+
+<GerenciadorTelas>:
+    TelaInicial:
+        name: "TelaInicial"
+    CalculosdeSoldagem:
+        name: "CalculosdeSoldagem"
+    Calculo1:
+        name: "Calculo1"
+    Calculo2:
+        name: "Calculo2"
+    Calculo3:
+        name: "Calculo3"
+    Calculo4:
+        name: "Calculo4"
+    SimbologiadeSoldagem:
+        name: "SimbologiadeSoldagem"
+    ConversordeUnidades:
+        name: "ConversordeUnidades"
+    Conversor1:
+        name: "Conversor1"
+    Conversor2:
+        name: "Conversor2"
+    SobreoLTS:
+        name: "SobreoLTS"
+
+<Calculo1>:
+    name: "Calculo1"
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1  # Fundo cinza
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        Label:
+            text: "Energia de\nSoldagem"
+            font_size: dp(40)
+            font_name: 'fonts/NekaLaurent.ttf'
+            bold: False
+            pos_hint: {"center_x": 0.5, "center_y": 0.83}
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(15)  # Espaçamento entre os campos
+            size_hint: 0.8, None  # Responsivo para largura
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "center_y": 0.45}  # Centraliza na tela
+
+            BoxLayout:
+                id: main_layout
+                orientation: "vertical"
+                spacing: dp(2)  # Espaço entre os elementos
+                height: dp(50)
+                size_hint_y: None
+                height: self.minimum_height  # Ajusta a altura automaticamente
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(30)  # Altura do texto explicativo
+                    Label:
+                        text: "Energia de Soldagem (KJ/mm)"  # Preencha com o texto explicativo (ex.: "Tensão de Arco (U) - Volts")
+                        font_size: dp(16)
+                        color: 1, 1, 1, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(55)
+
+                    TextInput:
+                        id: input_1
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85  # Reduz o tamanho para dar espaço à lixeira
+                        height: dp(55)
+                        padding: [dp(10), dp(8)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1  # Texto preto
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'  # Caminho para a imagem da lixeira
+                        size_hint_x: 0.15  # Espaço para a lixeira
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_1.text = "" 
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(30)
+                    Label:
+                        text: "Tensão de Arco (V)"  # Preencha com o texto explicativo (ex.: "Corrente Elétrica (I) - Amperes")
+                        font_size: dp(16)
+                        color: 1, 1, 1, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(55)
+
+                    TextInput:
+                        id: input_2
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(55)
+                        padding: [dp(10), dp(8)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_2.text = ""
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(30)
+                    Label:
+                        text: "Corrente (A)"  # Preencha com o texto explicativo (ex.: "Velocidade de Soldagem (v) - mm/s")
+                        font_size: dp(16)
+                        color: 1, 1, 1, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(55)
+
+                    TextInput:
+                        id: input_3
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(55)
+                        padding: [dp(10), dp(8)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_3.text = ""
+
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(30)
+                    Label:
+                        text: "Velocidade de Soldagem (cm/min)"  # Preencha com o texto explicativo (ex.: "Energia de Soldagem (E) - KJ/mm")
+                        font_size: dp(16)
+                        color: 1, 1, 1, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(55)
+
+                    TextInput:
+                        id: input_4
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(55)
+                        padding: [dp(10), dp(8)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_4.text = ""
+                Label:
+                    id: erro_energia
+                    text: ""
+                    color: 1, 0, 0, 1  # Vermelho
+                    font_size: '14sp'
+                    size_hint_y: None
+                    height: dp(20)  # Altura fixa para evitar que empurre elementos
+                Widget:
+                    size_hint_y: None
+                    height: dp(15)
+
+                Button:
+                    text: "Calcular"
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(20)
+                    size_hint_y: None
+                    height: dp(55)
+                    background_color: 0, 0, 0, 0
+                    color: 1, 1, 1, 1
+                    on_press: app.calcula_energia()  # CERTO
+                    canvas.before:
+                        Color:
+                            rgba: 1, 0.5, 0, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                Widget:
+                    size_hint_y: None
+                    height: dp(8)
+
+                ImageButton:
+                    source: 'midia/interroga.png'
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    pos_hint: {"center_x": 0.5}
+                    on_press: root.show_explanatory_box("Importante!", "A Energia de soldagem (E) é definida como\na energia liberada pela fonte de calor\npor unidade de comprimento da solda,\ncomo mostra a equação abaixo.***Por facilidade, neste aplicativo a mesma\né calculada de acordo com a equação abaixo,\nonde são inseridos os valores médios\ndas variáveis.\nEsta abordagem fornece uma estimativa\nrazoável para a energia de soldagem,\ncontudo em algumas situações pode levar\na um erro superior a 10%.***Onde V, I e Vs são valores instantâneos\nda tensão de arco, corrente de soldagem\ne vel. de soldagem, respectivamente.", "midia/equacaoEN1.png", "midia/equacaoEnergia.png")
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(100)  # Altura ajustada para responsividade
+            padding: [dp(10), 0]
+            pos_hint: {"top": 1.03}
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(58), dp(58)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: app.root.current = "CalculosdeSoldagem"
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"
+                markup: True  # Habilita o uso de tags de formatação
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1  # Cor padrão (não afeta o texto com tags)
+                bold: True
+                font_size: dp(30)  # Fonte ajustada para responsividade
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint: 1, None  # Responsivo para largura
+                height: dp(90)  # Altura ajustada
+
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: root.open_menu()
+
+        BoxLayout:
+            id: menu_layout
+            orientation: 'vertical'
+            size_hint: 0.5, None
+            height: self.minimum_height
+            opacity: 0  # Invisível até ser chamado
+            disabled: True  # Desativado até ser chamado
+            padding: [dp(10), dp(15), dp(10), dp(20)] # Esquerda, Topo, Direita, Baixo
+
+            Button:
+                text: "Tela Inicial"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0  # Remove a cor padrão
+                color: 0, 0, 0, 1  # Texto preto
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1  # Fundo branco
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "TelaInicial"  # Altera para a tela inicial
+                    app.root.get_screen("Calculo1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Simbologia de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SimbologiadeSoldagem"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Conversor de Unidades"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "ConversordeUnidades"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Sobre o LTS"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SobreoLTS"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Contato"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - 2, self.pos[1] - 2  # Move levemente para simular borda
+                        size: self.size[0] + 4, self.size[1] + 4  # Aumenta o tamanho para criar a borda
+                        radius: [dp(12)]  # Cantos arredondados um pouco maiores para suavizar a borda
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "Contatos"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo1").open_menu()  # Fecha o menu
+
+<Calculo2>:
+    name: "Calculo2"
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1  # Fundo cinza
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        Label:
+            text: " Corrente\nPulsada DC"
+            font_size: dp(38)
+            font_name: 'fonts/NekaLaurent.ttf'
+            bold: False
+            size_hint_y: None
+            height: dp(40)
+            pos_hint: {"top": 0.89, "center_x": 0.5}
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(5)  # Espaçamento entre os campos
+            size_hint: 0.8, None  # Responsivo para largura
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "center_y": 0.45}  # Centraliza na tela
+
+            BoxLayout: # Linha Corrente Média
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80) # Altura para label + input + lixeira
+                Label:
+                    text: "Corrente Média (A)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_5
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_5.text = ""
+
+            BoxLayout: # Linha Corrente Pulsada
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80) # Altura para label + input + lixeira
+                Label:
+                    text: "Corrente Pulsada (A)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_6
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_6.text = ""
+
+            BoxLayout: # Linha Tempo Pulsada
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80) # Altura para label + input + botões
+                Label:
+                    id: input_7_label
+                    text: "Tempo Pulsada (s)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_7
+                        hint_text: "..."
+                        font_size: dp(20)
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        size_hint_x: 0.7
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ToggleButtonCustom:
+                        id: ms_button_tp
+                        text: "ms"
+                        size_hint_x: 0.15
+                        on_state: root.atualizar_unidade_tempo_pulsada(self.state)
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_7.text = ""
+
+            BoxLayout: # Linha Corrente Base
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80) # Altura para label + input + lixeira
+                Label:
+                    text: "Corrente Base (A)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_8
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_8.text = ""
+
+            BoxLayout: # Linha Tempo Base
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80) # Altura para label + input + botões
+                Label:
+                    id: input_9_label
+                    text: "Tempo Base (s)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_9
+                        hint_text: "..."
+                        font_size: dp(20)
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        size_hint_x: 0.7
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ToggleButtonCustom:
+                        id: ms_button_tb
+                        text: "ms"
+                        spacing: dp(4)
+                        size_hint_x: 0.15
+                        on_state: root.atualizar_unidade_tempo_base(self.state)
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_9.text = ""
+            Label:
+                id: erro_corrente
+                text: ""
+                color: 1, 0, 0, 1  # Vermelho
+                font_size: '14sp'
+                size_hint_y: None
+                height: dp(20)  # Altura fixa para evitar que empurre elementos
+            Widget:
+                size_hint_y: None
+                height: dp(15)
+
+            Button:
+                text: "Calcular"
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(20)
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 1, 1, 1, 1
+                on_press: app.calcula_corrente_pulsada()  # CERTO
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.5, 0, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+            Widget:
+                size_hint_y: None  # Não ocupa altura proporcional
+                height: dp(8)
+            ImageButton:
+                source: 'midia/interroga.png'  # Caminho para a imagem
+                size_hint: None, None
+                size: dp(40), dp(40)  # Tamanho da imagem
+                pos_hint: {"center_x": 0.5}  # Centraliza horizontalmente
+                on_press: root.show_explanatory_box("Importante!", "Esta equação é comumente utilizada na determinação do valor eficaz dos sinais com forma de onda retangular.", "midia/equacaoEN1.png")
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(100)  # Altura ajustada para responsividade
+            padding: [dp(10), 0]
+            pos_hint: {"top": 1.03}
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: app.root.current = "CalculosdeSoldagem"
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"  # LTS em azul bebê e app em branco
+                markup: True  # Habilita o uso de tags de formatação
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1  # Cor padrão (não afeta o texto com tags)
+                bold: True
+                font_size: dp(30)  # Fonte ajustada para responsividade
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint: 1, None  # Responsivo para largura
+                height: dp(90)  # Altura ajustada
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: root.open_menu()
+
+        BoxLayout:
+            id: menu_layout
+            orientation: 'vertical'
+            size_hint: 0.5, None
+            height: self.minimum_height
+            opacity: 0  # Invisível até ser chamado
+            disabled: True  # Desativado até ser chamado
+            padding: [dp(10), dp(15), dp(10), dp(20)] # Esquerda, Topo, Direita, Baixo
+
+            Button:
+                text: "Tela Inicial"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0  # Remove a cor padrão
+                color: 0, 0, 0, 1  # Texto preto
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1  # Fundo branco
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "TelaInicial"  # Altera para a tela inicial
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Simbologia de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SimbologiadeSoldagem"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Conversor de Unidades"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "ConversordeUnidades"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Sobre o LTS"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SobreoLTS"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Contato"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - 2, self.pos[1] - 2  # Move levemente para simular borda
+                        size: self.size[0] + 4, self.size[1] + 4  # Aumenta o tamanho para criar a borda
+                        radius: [dp(12)]  # Cantos arredondados um pouco maiores para suavizar a borda
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "Contatos"
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+<Calculo4>:
+    name: "Calculo4"
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1  # Fundo cinza igual Calculo2
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        Label:
+            text: " Oscilação\nTriangular"
+            font_size: dp(38)
+            font_name: 'fonts/NekaLaurent.ttf'
+            bold: False
+            size_hint_y: None
+            height: dp(40)
+            pos_hint: {"top": 0.89, "center_x": 0.5}
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(5)
+            size_hint: 0.8, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "center_y": 0.45}
+
+            # Velocidade de Oscilação (m/min)
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80)
+                Label:
+                    text: "Velocidade de Oscilação (m/min)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_vs
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_vs.text = ""
+
+            # Frequência de Oscilação (Hz)
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80)
+                Label:
+                    text: "Frequência de Oscilação (Hz)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_freq
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_freq.text = ""
+
+            # Deslocamento (s)
+            BoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80)
+                Label:
+                    text: "Deslocamento (mm)"
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_s
+                        hint_text: "..."
+                        font_size: dp(20)
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        multiline: False
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_s.text = ""
+
+            Label:
+                id: erro_saida
+                text: ""
+                color: 1, 1, 0, 1
+                font_size: '14sp'
+                size_hint_y: None
+                height: dp(20)
+
+            Widget:
+                size_hint_y: None
+                height: dp(8)
+
+            Button:
+                text: "Calcular"
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(20)
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 1, 1, 1, 1
+                on_press: root.atualizar_saida()
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.5, 0, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+
+            Widget:
+                size_hint_y: None
+                height: dp(8)
+            ImageButton:
+                source: 'midia/interroga.png'
+                size_hint: None, None
+                size: dp(40), dp(40)
+                pos_hint: {"center_x": 0.5}
+                on_press: root.show_explanatory_box("Importante!", "Esta equação é comumente utilizada na determinação do valor eficaz dos sinais\ncom forma de onda retangular.", "midia/equacaoIEF.png")
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(100)  # Altura ajustada para responsividade
+            padding: [dp(10), 0]
+            pos_hint: {"top": 1.03}
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: app.root.current = "CalculosdeSoldagem"
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"  # LTS em azul e app em branco
+                markup: True  # Habilita o uso de tags de formatação
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1  # Cor padrão (não afeta o texto com tags)
+                bold: True
+                font_size: dp(30)  # Fonte ajustada para responsividade
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint: 1, None  # Responsivo para largura
+                height: dp(90)  # Altura ajustada
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: root.open_menu()
+
+        BoxLayout:
+            id: menu_layout
+            orientation: 'vertical'
+            size_hint: 0.5, None
+            height: self.minimum_height
+            opacity: 0  # Invisível até ser chamado
+            disabled: True  # Desativado até ser chamado
+            padding: [dp(10), dp(15), dp(10), dp(20)] # Esquerda, Topo, Direita, Baixo
+
+            Button:
+                text: "Tela Inicial"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0  # Remove a cor padrão
+                color: 0, 0, 0, 1  # Texto preto
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1  # Fundo branco
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "TelaInicial"  # Altera para a tela inicial
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Simbologia de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SimbologiadeSoldagem"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Conversor de Unidades"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "ConversordeUnidades"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Sobre o LTS"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SobreoLTS"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Contato"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - 2, self.pos[1] - 2  # Move levemente para simular borda
+                        size: self.size[0] + 4, self.size[1] + 4  # Aumenta o tamanho para criar a borda
+                        radius: [dp(12)]  # Cantos arredondados um pouco maiores para suavizar a borda
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "Contatos"
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+<Calculo3>:
+    name: "Calculo3"
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1  # Fundo cinza
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        Label:
+            text: " Corrente\nPulsada AC"
+            font_size: dp(38)
+            font_name: 'fonts/NekaLaurent.ttf'
+            bold: False
+            size_hint_y: None
+            height: dp(40)
+            pos_hint: {"top": 0.89, "center_x": 0.5}
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(5)
+            size_hint: 0.8, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "center_y": 0.45}
+
+            BoxLayout: # Linha Corrente Eficaz (Ief) - AGORA É UM CAMPO DE ENTRADA/SAÍDA
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80) # Mesma altura dos outros campos
+                Label:
+                    text: "Corrente Eficaz (A)" # Label clara para Ief
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50) # Mesma altura da caixa de texto + lixeira
+                    TextInput:
+                        id: input_ief # ID para Ief (agora é editável)
+                        hint_text: "..."
+                        font_size: dp(20)
+                        input_type: 'number' # Permite apenas números (para entrada)
+                        multiline: False
+                        size_hint_x: 0.85 # Mesma largura dos outros TextInputs
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15 # Mesma largura dos botões de lixeira
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_ief.text = "" # Limpa o campo Ief
+
+            BoxLayout: # Linha Corrente de Pico (Ip) - usa input_12
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80)
+                Label:
+                    text: "Corrente Pulsada (A)" # Label clara para Ip
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_12 # ID para Ip
+                        hint_text: "..."
+                        font_size: dp(20)
+                        input_type: 'number' # Permite apenas números
+                        multiline: False
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_12.text = "" # Limpa o campo Ip
+
+            # REMOVIDO o BoxLayout "Corrente Pulsada (A)" (input_13) pois não é uma variável da fórmula.
+
+            BoxLayout: # Linha Tempo Pulsada (tp) - usa input_14
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80)
+                Label:
+                    id: input_14_label # ID para a label da unidade de tp
+                    text: "Tempo Pulsada (s)" # Texto padrão da label
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_14 # ID para tp
+                        hint_text: "..."
+                        font_size: dp(20)
+                        input_type: 'number'
+                        multiline: False
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        size_hint_x: 0.7 # Espaço para o campo e o botão 'ms'
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ToggleButtonCustom:
+                        id: ms_button_tb # ID para o botão 'ms'
+                        text: "ms"
+                        spacing: dp(4)
+                        size_hint_x: 0.15
+                        on_state: root.atualizar_unidade_tempo_base(self.state)
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_14.text = "" # Limpa o campo tp
+
+            BoxLayout: # Linha Corrente Base (Ib) - usa input_15
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80)
+                Label:
+                    text: "Corrente Base (A)" # Label clara para Ib
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_15 # ID para Ib
+                        hint_text: "..."
+                        font_size: dp(20)
+                        input_type: 'number'
+                        multiline: False
+                        size_hint_x: 0.85
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_15.text = "" # Limpa o campo Ib
+
+            BoxLayout: # Linha Tempo Base (tb) - usa input_16
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(80)
+                Label:
+                    id: input_16_label # ID para a label da unidade de tb
+                    text: "Tempo Base (s)" # Texto padrão da label
+                    font_size: dp(16)
+                    color: 1, 1, 1, 1
+                    halign: "left"
+                    valign: "middle"
+                    text_size: self.size
+                BoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: dp(50)
+                    TextInput:
+                        id: input_16 # ID para tb
+                        hint_text: "..."
+                        font_size: dp(20)
+                        input_type: 'number'
+                        multiline: False
+                        height: dp(45)
+                        padding: [dp(10), dp(4)]
+                        foreground_color: 0, 0, 0, 1
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        size_hint_x: 0.7 # Espaço para o campo e o botão 'ms'
+                        canvas.before:
+                            Color:
+                                rgba: 0.9, 0.9, 0.9, 1
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(10)]
+                            Color:
+                                rgba: 0, 0, 0, 1
+                    ToggleButtonCustom:
+                        id: ms_button_tb # ID para o botão 'ms'
+                        text: "ms"
+                        spacing: dp(4)
+                        size_hint_x: 0.15
+                        on_state: root.atualizar_unidade_tempo_base(self.state) # Atualiza a label e dispara cálculo
+                    ImageButton:
+                        source: 'midia/lixeira.png'
+                        size_hint_x: 0.15
+                        allow_stretch: True
+                        keep_ratio: True
+                        on_press: input_16.text = "" # Limpa o campo tb
+
+            Label:
+                id: erro_corrente_efetiva
+                text: ""
+                color: 1, 0, 0, 1
+                font_size: '14sp'
+                size_hint_y: None
+                height: dp(20)
+            Widget:
+                size_hint_y: None
+                height: dp(15)
+
+            Button:
+                text: "Calcular"
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(20)
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 1, 1, 1, 1
+                on_press: root.atualizar_saida() # Dispara a lógica de cálculo
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.5, 0, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+            Widget:
+                size_hint_y: None
+                height: dp(8)
+            ImageButton:
+                source: 'midia/interroga.png'
+                size_hint: None, None
+                size: dp(40), dp(40)
+                pos_hint: {"center_x": 0.5}
+                on_press: root.show_explanatory_box("Importante!", "Esta equação é comumente utilizada na determinação do valor eficaz dos sinais\ncom forma de onda retangular.", "midia/equacaoIEF.png")
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(100)  # Altura ajustada para responsividade
+            padding: [dp(10), 0]
+            pos_hint: {"top": 1.03}
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: app.root.current = "CalculosdeSoldagem"
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"  # LTS em azul e app em branco
+                markup: True  # Habilita o uso de tags de formatação
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1  # Cor padrão (não afeta o texto com tags)
+                bold: True
+                font_size: dp(30)  # Fonte ajustada para responsividade
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint: 1, None  # Responsivo para largura
+                height: dp(90)  # Altura ajustada
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: root.open_menu()
+
+        BoxLayout:
+            id: menu_layout
+            orientation: 'vertical'
+            size_hint: 0.5, None
+            height: self.minimum_height
+            opacity: 0  # Invisível até ser chamado
+            disabled: True  # Desativado até ser chamado
+            padding: [dp(10), dp(15), dp(10), dp(20)] # Esquerda, Topo, Direita, Baixo
+
+            Button:
+                text: "Tela Inicial"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0  # Remove a cor padrão
+                color: 0, 0, 0, 1  # Texto preto
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1  # Fundo branco
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "TelaInicial"  # Altera para a tela inicial
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Simbologia de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SimbologiadeSoldagem"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Conversor de Unidades"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "ConversordeUnidades"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Sobre o LTS"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SobreoLTS"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Contato"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - 2, self.pos[1] - 2  # Move levemente para simular borda
+                        size: self.size[0] + 4, self.size[1] + 4  # Aumenta o tamanho para criar a borda
+                        radius: [dp(12)]  # Cantos arredondados um pouco maiores para suavizar a borda
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "Contatos"
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu
+
+<SimbologiadeSoldagem>:
+    canvas:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    FloatLayout:
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(60)
+            pos_hint: {"top": 1}
+            padding: dp(10), 0
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(60), dp(60)
+                on_press: app.root.current = "TelaInicial"
+
+            Widget:  # espaço centralizador
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"
+                markup: True
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(30)
+                size_hint: None, None
+                size: self.texture_size
+                pos_hint: {"center_x": 0.5, "center_y": 0.5} # Ajustado para melhor centralização vertical na barra
+
+            Widget:
+
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)
+                on_press: root.open_menu()
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.95, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "top": 0.95} # Levemente abaixo da barra superior
+            spacing: dp(8)
+
+            Label:
+                text: "Simbologia de Soldagem"
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1
+                font_size: dp(32)
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1] + dp(10)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(52)
+                spacing: dp(6)
+
+                Button:
+                    text: "Tipo 1"
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    color: 0, 0, 0, 1
+                    size_hint_x: 0.33
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [dp(15)]
+
+                Button:
+                    text: "Tipo 2"
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    color: 0, 0, 0, 1
+                    size_hint_x: 0.33
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [dp(15)]
+
+                Button:
+                    text: "Tipo 3"
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    color: 0, 0, 0, 1
+                    size_hint_x: 0.33
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [dp(15)]
+
+        # BOTÕES DE CÁLCULOS (Desenhados em seguida)
+        GridLayout:
+            id: glayout
+            cols: 2
+            spacing: dp(12)
+            padding: dp(12)
+            size_hint: 1.025, None
+            pos_hint: {"center_x": 0.5, "top": 0.78}
+            height: self.minimum_height
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 1"
+                explanation_text_before_image: "Este símbolo representa a energia usada no processo de soldagem."
+
+            ButtonSimbologia:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Símbolo 2"
+                explanation_text: "Este símbolo se refere à eficiência térmica do processo."
+
+            ButtonSimbologia:
+                img_source: 'midia/dilatacaotermica.png'
+                text_label: "Símbolo 3"
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 4"
+                explanation_text: "Este símbolo representa a energia usada no processo de soldagem."
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 4"
+                explanation_text: "Este símbolo representa a energia usada no processo de soldagem."
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 4"
+                explanation_text: "Este símbolo representa a energia usada no processo de soldagem."
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 4"
+                explanation_text: "Este símbolo representa a energia usada no processo de soldagem."
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 4"
+                explanation_text: "Este símbolo representa a energia usada no processo de soldagem."
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 4"
+                explanation_text: "Este símbolo representa a energia usada no processo de soldagem."
+
+            ButtonSimbologia:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Símbolo 4"
+                explanation_text: "Este símbolo representa a energia usada no processo de soldagem."
+
+            BoxLayout:
+                id: menu_layout
+                orientation: 'vertical'
+                size_hint: 0.5, None
+                height: self.minimum_height
+                padding: [dp(10), dp(15), dp(10), dp(20)]
+                pos_hint: {"x": 0.5, "top": 1.25} # Posição inicial (provavelmente animado para {"right": 1, "top": 1} ou similar quando visível)
+                opacity: 0
+                disabled: True
+
+                Button:
+                    text: "Tela Inicial"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "TelaInicial"
+                        root.open_menu() # Assumindo que open_menu() é um toggle no root (CalculosdeSoldagem)
+
+                Button:
+                    text: "Cálculos de Soldagem"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "CalculosdeSoldagem"
+                        root.open_menu()
+
+                Button:
+                    text: "Conversor de Unidades"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "ConversordeUnidades"
+                        root.open_menu()
+
+                Button:
+                    text: "Sobre o LTS"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "SobreoLTS"
+                        root.open_menu()
+
+                Button:
+                    text: "Contato"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2) # Corrigido para usar dp e self.x/y
+                            size: self.width + dp(4), self.height + dp(4) # Corrigido para usar dp e self.width/height
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "Contatos"
+                        root.open_menu()
+
+<Conversor1>:
+    name: "Calculo1"
+    input_10: input_10
+    input_11: input_11
+    unidade_entrada: unidade_entrada
+    unidade_saida: unidade_saida
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        Label:
+            text: "Conversor de Unidades"
+            font_size: dp(30)
+            font_name: 'fonts/NekaLaurent.ttf'
+            bold: False
+            pos_hint: {"center_x": 0.5, "center_y": 0.85}
+
+        Label:
+            text: "Velocidade de Soldagem"
+            font_size: dp(28)
+            font_name: 'fonts/NekaLaurent.ttf'
+            bold: False
+            pos_hint: {"center_x": 0.5, "center_y": 0.77}
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(10)
+            size_hint: 0.9, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(20)
+
+                Spinner:
+                    id: unidade_entrada
+                    text: "mm/s"
+                    values: ["mm/s", "cm/min", "in/s", "m/s"] # Added "m/s" here
+                    size_hint_x: 0.5
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    color: (1, 1, 1, 1)
+                    font_size: dp(18)
+                    option_cls: "SpinnerOption"
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.4, 0.9, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1.2
+                            rounded_rectangle: (*self.pos, *self.size, dp(15))
+
+                ImageButton:
+                    source: "midia/seta_vai.png"
+                    size_hint_x: 0.2
+                    allow_stretch: True
+                    keep_ratio: True
+                    on_press:
+                        root.inverter_spinners()
+
+                Spinner:
+                    id: unidade_saida
+                    text: "cm/min"
+                    values: ["mm/s", "cm/min", "in/s", "m/s"] # Added "m/s" here
+                    size_hint_x: 0.5
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    color: (1, 1, 1, 1)
+                    font_size: dp(18)
+                    option_cls: "SpinnerOption"
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.4, 0.9, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1.2
+                            rounded_rectangle: (*self.pos, *self.size, dp(15))
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(20)
+                size_hint_y: None
+                height: dp(180)
+
+                TextInput:
+                    id: input_10
+                    hint_text: "Entrada"
+                    font_size: dp(26)
+                    size_hint_x: 0.5
+                    padding: [dp(14), dp(14)]
+                    multiline: False
+                    foreground_color: 0, 0, 0, 1
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.9, 0.9, 0.9, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                        Color:
+                            rgba: 0, 0, 0, 1
+
+                TextInput:
+                    id: input_11
+                    hint_text: "Saída"
+                    font_size: dp(26)
+                    size_hint_x: 0.5
+                    padding: [dp(14), dp(14)]
+                    multiline: False
+                    foreground_color: 0, 0, 0, 1
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    canvas.before:
+                        Color:
+                            rgba: 0.9, 0.9, 0.9, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                        Color:
+                            rgba: 0, 0, 0, 1
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(100)  # Altura ajustada para responsividade
+            padding: [dp(10), 0]
+            pos_hint: {"top": 1.03}
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(58), dp(58)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: app.root.current = "ConversordeUnidades"
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"
+                markup: True  # Habilita o uso de tags de formatação
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1  # Cor padrão (não afeta o texto com tags)
+                bold: True
+                font_size: dp(30)  # Fonte ajustada para responsividade
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint: 1, None  # Responsivo para largura
+                height: dp(90)  # Altura ajustada
+
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: root.open_menu()
+
+        BoxLayout:
+            id: menu_layout
+            orientation: 'vertical'
+            size_hint: 0.5, None
+            height: self.minimum_height
+            opacity: 0  # Invisível até ser chamado
+            disabled: True  # Desativado até ser chamado
+            padding: [dp(10), dp(15), dp(10), dp(20)] # Esquerda, Topo, Direita, Baixo
+
+            Button:
+                text: "Tela Inicial"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0  # Remove a cor padrão
+                color: 0, 0, 0, 1  # Texto preto
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1  # Fundo branco
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "TelaInicial"  # Altera para a tela inicial
+                    app.root.get_screen("Conversor1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Cálculos de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "CalculosdeSoldagem"  # Altera para a tela de simbologia
+                    app.root.get_screen("Conversor1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Simbologia de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SimbologiadeSoldagem"  # Altera para a tela de simbologia
+                    app.root.get_screen("Conversor1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Sobre o LTS"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SobreoLTS"  # Altera para a tela de simbologia
+                    app.root.get_screen("Conversor1").open_menu()  # Fecha o menu
+
+            Button:
+                text: "Contato"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - 2, self.pos[1] - 2  # Move levemente para simular borda
+                        size: self.size[0] + 4, self.size[1] + 4  # Aumenta o tamanho para criar a borda
+                        radius: [dp(12)]  # Cantos arredondados um pouco maiores para suavizar a borda
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "Contatos"  # Altera para a tela de simbologia
+                    app.root.get_screen("Conversor1").open_menu()  # Fecha o menu
+
+<Conversor2>:
+    name: "Calculo2" # Nome da tela para navegação, ajustado para Conversor2
+    input_12: input_12 # Referência para o campo de entrada
+    input_13: input_13 # Referência para o campo de saída
+    unidade_entrada: unidade_entrada
+    unidade_saida: unidade_saida
+
+    FloatLayout:
+        # Desenha um retângulo cinza como fundo da tela
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1  # Cor cinza escura
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        # Título principal da aplicação
+        Label:
+            text: "Conversor de Unidades"
+            font_size: dp(30)
+            font_name: 'fonts/NekaLaurent.ttf' # Caminho absoluto para a fonte
+            bold: False
+            pos_hint: {"center_x": 0.5, "center_y": 0.85} # Posição centralizada no topo
+
+        # Subtítulo para a categoria de conversão
+        Label:
+            text: "Vazão de Gás" # Subtítulo atualizado para Vazão de Gás
+            font_size: dp(28)
+            font_name: 'fonts/NekaLaurent.ttf' # Caminho absoluto para a fonte
+            bold: False
+            pos_hint: {"center_x": 0.5, "center_y": 0.77} # Posição abaixo do título principal
+
+        # Contêiner principal para os Spinners e TextInputs
+        BoxLayout:
+            orientation: "vertical"
+            spacing: dp(10) # Espaçamento entre os widgets internos
+            size_hint: 0.9, None # Largura de 90% da tela, altura automática
+            height: self.minimum_height # Altura mínima baseada no conteúdo
+            pos_hint: {"center_x": 0.5, "center_y": 0.5} # Posição centralizada na tela
+
+            # Layout horizontal para os Spinners e o ImageButton
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None # Altura fixa
+                height: dp(50) # Altura de 50dp
+                spacing: dp(20) # Espaçamento entre os elementos internos
+
+                # Spinner de entrada de unidade
+                Spinner:
+                    id: unidade_entrada
+                    text: "L/min" # Unidade padrão de entrada
+                    values: ["L/min", "m³/min"] # Valores para vazão de gás
+                    size_hint_x: 0.5
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    color: (1, 1, 1, 1)
+                    font_size: dp(18)
+                    option_cls: "SpinnerOption"
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.4, 0.9, 1  # Cor de fundo azul forte
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1.2
+                            rounded_rectangle: (*self.pos, *self.size, dp(15))
+
+                # ImageButton para inverter os Spinners
+                ImageButton:
+                    source: "midia/seta_vai.png" # Caminho absoluto para a imagem
+                    size_hint_x: 0.2 # Largura de 20% do BoxLayout pai
+                    allow_stretch: True # Permite esticar a imagem
+                    keep_ratio: True # Mantém a proporção da imagem
+                    on_press:
+                        root.inverter_spinners()
+
+                # Spinner de saída de unidade
+                Spinner:
+                    id: unidade_saida
+                    text: "m³/min" # Unidade padrão de saída
+                    values: ["L/min", "m³/min"] # Valores para vazão de gás
+                    size_hint_x: 0.5
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    color: (1, 1, 1, 1)
+                    font_size: dp(18)
+                    option_cls: "SpinnerOption"
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.4, 0.9, 1  # Cor de fundo azul forte
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 1.2
+                            rounded_rectangle: (*self.pos, *self.size, dp(15))
+
+            # Layout horizontal para as caixas de entrada/saída de texto
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(20) # Espaçamento entre os TextInputs
+                size_hint_y: None # Altura fixa
+                height: dp(180) # Altura de 180dp
+
+                # TextInput para a entrada de valor
+                TextInput:
+                    id: input_12 # Ajustado para input_12
+                    hint_text: "Entrada"
+                    font_size: dp(26)
+                    size_hint_x: 0.5
+                    padding: [dp(14), dp(14)]
+                    multiline: False
+                    foreground_color: 0, 0, 0, 1
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.9, 0.9, 0.9, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                        Color:
+                            rgba: 0, 0, 0, 1
+
+                # TextInput para a saída de valor
+                TextInput:
+                    id: input_13 # Ajustado para input_13
+                    hint_text: "Saída" # Texto de dica
+                    font_size: dp(26)
+                    size_hint_x: 0.5 # Largura de 50% do BoxLayout pai
+                    padding: [dp(14), dp(14)] # Preenchimento interno
+                    multiline: False # Não permite múltiplas linhas
+                    foreground_color: 0, 0, 0, 1 # Cor do texto preto
+                    background_color: 0, 0, 0, 0 # Fundo transparente para usar o canvas
+                    background_normal: "" # Desativa o fundo padrão
+                    canvas.before:
+                        Color:
+                            rgba: 0.9, 0.9, 0.9, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                        Color:
+                            rgba: 0, 0, 0, 1
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(100)  # Altura ajustada para responsividade
+            padding: [dp(10), 0]
+            pos_hint: {"top": 1.03}
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(58), dp(58)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: app.root.current = "ConversordeUnidades" # Mantém a navegação para a tela principal de conversores
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"
+                markup: True  # Habilita o uso de tags de formatação
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1  # Cor padrão (não afeta o texto com tags)
+                bold: True
+                font_size: dp(30)  # Fonte ajustada para responsividade
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.size
+                size_hint: 1, None  # Responsivo para largura
+                height: dp(90)  # Altura ajustada
+
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)  # Tamanho ajustado para responsividade
+                pos_hint: {"center_y": 0.5}  # Centraliza verticalmente
+                on_press: root.open_menu()
+
+        BoxLayout:
+            id: menu_layout
+            orientation: 'vertical'
+            size_hint: 0.5, None
+            height: self.minimum_height
+            opacity: 0  # Invisível até ser chamado
+            disabled: True  # Desativado até ser chamado
+            padding: [dp(10), dp(15), dp(10), dp(20)] # Esquerda, Topo, Direita, Baixo
+
+            Button:
+                text: "Tela Inicial"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0  # Remove a cor padrão
+                color: 0, 0, 0, 1  # Texto preto
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1  # Fundo branco
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "TelaInicial"  # Altera para a tela inicial
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu na tela atual
+
+            Button:
+                text: "Cálculos de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "CalculosdeSoldagem"  # Altera para a tela de cálculos
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu na tela atual
+
+            Button:
+                text: "Simbologia de Soldagem"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SimbologiadeSoldagem"  # Altera para a tela de simbologia
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu na tela atual
+
+            Button:
+                text: "Sobre o LTS"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - dp(2), self.pos[1] - dp(2)
+                        size: self.size[0] + dp(4), self.size[1] + dp(4)
+                        radius: [dp(12)]
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "SobreoLTS"  # Altera para a tela Sobre o LTS
+                    app.root.get_screen("Calculo2").open_menu()  # Fecha o menu na tela atual
+
+            Button:
+                text: "Contato"
+                size_hint_y: None
+                height: dp(50)
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(16)
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1  # Contorno preto
+                    RoundedRectangle:
+                        pos: self.pos[0] - 2, self.pos[1] - 2  # Move levemente para simular borda
+                        size: self.size[0] + 4, self.size[1] + 4  # Aumenta o tamanho para criar a borda
+                        radius: [dp(12)]  # Cantos arredondados um pouco maiores para suavizar a borda
+                    Color:
+                        rgba: 1, 1, 1, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(10)]
+                on_press:
+                    app.root.current = "Contatos"  # Altera para a tela de Contatos
+                    app.root.get_screen("Calculo2").open_menu()
+
+<ConversordeUnidades>:
+    canvas:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    FloatLayout:
+        # BARRA SUPERIOR FIXA (Desenhada primeiro)
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(60)
+            pos_hint: {"top": 1}
+            padding: dp(10), 0
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(60), dp(60)
+                on_press: app.root.current = "TelaInicial"
+
+            Widget:  # espaço centralizador
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"
+                markup: True
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(30)
+                size_hint: None, None
+                size: self.texture_size
+                pos_hint: {"center_x": 0.5, "center_y": 0.5} # Ajustado para melhor centralização vertical na barra
+
+            Widget:
+
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)
+                on_press: root.open_menu()
+
+        # TÍTULO E BOTÕES PEQUENOS (Desenhados em seguida)
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.9, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "top": 0.92} # Levemente abaixo da barra superior
+            spacing: dp(10)
+
+            Label:
+                text: "Conversor de Unidades"
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1
+                font_size: dp(32)
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1] + dp(10)
+
+        # BOTÕES DE CÁLCULOS (Desenhados em seguida)
+        GridLayout:
+            id: glayout
+            cols: 2
+            spacing: dp(12)
+            padding: dp(12)
+            size_hint: 1.025, None # size_hint_x um pouco maior que 1 pode ser intencional ou um typo. Se for para preencher, 1.0 é suficiente.
+            pos_hint: {"center_x": 0.5, "top": 0.78} # Ajuste 'top' conforme a posição dos elementos acima
+            height: self.minimum_height
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Velocidade de Solda"
+                on_press: app.root.current = "Conversor1"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/vazaogas.png'
+                text_label: "Vazão de Gás"
+                on_press: app.root.current = "Conversor2"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/dilatacaotermica.png'
+                text_label: "Conversão 3"
+                on_press: app.root.current = "Conversor3"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/velocidadesoldagem.png'
+                text_label: "Conversão 4"
+                on_press: app.root.current = "Conversor4"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/tensaotermica.png'
+                text_label: "Conversão 5"
+                on_press: app.root.current = "Calculo5"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/consumogas.png'
+                text_label: "Conversão 6"
+                on_press: app.root.current = "Calculo6"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido, talvez para outros cálculos
+                on_press: app.root.current = "Calculo7"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido
+                on_press: app.root.current = "Calculo8"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido
+                on_press: app.root.current = "Calculo9"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido
+                on_press: app.root.current = "Calculo10"
+
+        # MENU LATERAL (Desenhado por último, sobrepondo os demais)
+            BoxLayout:
+                id: menu_layout
+                orientation: 'vertical'
+                size_hint: 0.5, None
+                height: self.minimum_height
+                padding: [dp(10), dp(15), dp(10), dp(20)]
+                pos_hint: {"x": 0.5, "top": 1.25} # Posição inicial (provavelmente animado para {"right": 1, "top": 1} ou similar quando visível)
+                opacity: 0
+                disabled: True
+
+                Button:
+                    text: "Tela Inicial"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "TelaInicial"
+                        root.open_menu() # Assumindo que open_menu() é um toggle no root (CalculosdeSoldagem)
+
+                Button:
+                    text: "Cálculos de Soldagem"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "CalculosdeSoldagem"
+                        root.open_menu()
+
+                Button:
+                    text: "Simbologia de Soldagem"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "SimbologiadeSoldagem"
+                        root.open_menu()
+
+                Button:
+                    text: "Sobre o LTS"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "SobreoLTS"
+                        root.open_menu()
+
+                Button:
+                    text: "Contato"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2) # Corrigido para usar dp e self.x/y
+                            size: self.width + dp(4), self.height + dp(4) # Corrigido para usar dp e self.width/height
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "Contatos"
+                        root.open_menu()
+
+<CalculosdeSoldagem>:
+    canvas:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    FloatLayout:
+        # BARRA SUPERIOR FIXA (Desenhada primeiro)
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(60)
+            pos_hint: {"top": 1}
+            padding: dp(10), 0
+
+            ImageButton:
+                source: 'midia/seta.png'
+                size_hint: None, None
+                size: dp(60), dp(60)
+                on_press: app.root.current = "TelaInicial"
+
+            Widget:  # espaço centralizador
+
+            Label:
+                text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"
+                markup: True
+                font_name: 'fonts/NekaLaurent.ttf'
+                font_size: dp(30)
+                size_hint: None, None
+                size: self.texture_size
+                pos_hint: {"center_x": 0.5, "center_y": 0.5} # Ajustado para melhor centralização vertical na barra
+
+            Widget:
+
+            ImageButton:
+                id: menu_button
+                source: 'midia/menu_white.png'
+                size_hint: None, None
+                size: dp(60), dp(60)
+                on_press: root.open_menu()
+
+        # TÍTULO E BOTÕES PEQUENOS (Desenhados em seguida)
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.9, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "top": 0.92} # Levemente abaixo da barra superior
+            spacing: dp(10)
+
+            Label:
+                text: "Área de Cálculos"
+                font_name: 'fonts/NekaLaurent.ttf'
+                color: 1, 1, 1, 1
+                font_size: dp(32)
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1] + dp(10)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(52)
+                spacing: dp(10)
+                Button:
+                    text: "Tipo 1"
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    color: 0, 0, 0, 1
+                    size_hint_x: 0.33
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [dp(15)]
+
+                Button:
+                    text: "Tipo 2"
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    color: 0, 0, 0, 1
+                    size_hint_x: 0.33
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [dp(15)]
+
+                Button:
+                    text: "Tipo 3"
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    color: 0, 0, 0, 1
+                    size_hint_x: 0.33
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [dp(15)]
+
+        # BOTÕES DE CÁLCULOS (Desenhados em seguida)
+        GridLayout:
+            id: glayout
+            cols: 2
+            spacing: dp(12)
+            padding: dp(12)
+            size_hint: 1.025, None # size_hint_x um pouco maior que 1 pode ser intencional ou um typo. Se for para preencher, 1.0 é suficiente.
+            pos_hint: {"center_x": 0.5, "top": 0.78} # Ajuste 'top' conforme a posição dos elementos acima
+            height: self.minimum_height
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/energiasoldagem.png'
+                text_label: "Energia de Soldagem"
+                on_press: app.root.current = "Calculo1"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/pulsadaDC.png'
+                text_label: "Corrente Pulsada DC"
+                on_press: app.root.current = "Calculo2"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/pulsadaAC.png'
+                text_label: "Corrente Pulsada AC"
+                on_press: app.root.current = "Calculo3"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/velocidadesoldagem.png'
+                text_label: "Oscilação Triangular"
+                on_press: app.root.current = "Calculo4"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/tensaotermica.png'
+                text_label: "Tensão Térmica"
+                on_press: app.root.current = "Calculo5"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/consumogas.png'
+                text_label: "Consumo\nde Gás"
+                on_press: app.root.current = "Calculo6"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido, talvez para outros cálculos
+                on_press: app.root.current = "Calculo7"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido
+                on_press: app.root.current = "Calculo8"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido
+                on_press: app.root.current = "Calculo9"
+
+            ButtonCustomCalculadora:
+                img_source: 'midia/eficiencia.png'
+                text_label: "Eficiência Térmica" # Repetido
+                on_press: app.root.current = "Calculo10"
+
+        # MENU LATERAL (Desenhado por último, sobrepondo os demais)
+            BoxLayout:
+                id: menu_layout
+                orientation: 'vertical'
+                size_hint: 0.5, None
+                height: self.minimum_height
+                padding: [dp(10), dp(15), dp(10), dp(20)]
+                pos_hint: {"x": 0.5, "top": 1.25} # Posição inicial (provavelmente animado para {"right": 1, "top": 1} ou similar quando visível)
+                opacity: 0
+                disabled: True
+
+                Button:
+                    text: "Tela Inicial"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "TelaInicial"
+                        root.open_menu() # Assumindo que open_menu() é um toggle no root (CalculosdeSoldagem)
+
+                Button:
+                    text: "Simbologia de Soldagem"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "SimbologiadeSoldagem"
+                        root.open_menu()
+
+                Button:
+                    text: "Conversor de Unidades"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "ConversordeUnidades"
+                        root.open_menu()
+
+                Button:
+                    text: "Sobre o LTS"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2)
+                            size: self.width + dp(4), self.height + dp(4)
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "SobreoLTS"
+                        root.open_menu()
+
+                Button:
+                    text: "Contato"
+                    size_hint_y: None
+                    height: dp(50)
+                    background_color: 0, 0, 0, 0
+                    color: 0, 0, 0, 1
+                    font_name: 'fonts/NekaLaurent.ttf'
+                    font_size: dp(16)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        RoundedRectangle:
+                            pos: self.x - dp(2), self.y - dp(2) # Corrigido para usar dp e self.x/y
+                            size: self.width + dp(4), self.height + dp(4) # Corrigido para usar dp e self.width/height
+                            radius: [dp(12)]
+                        Color:
+                            rgba: 1, 1, 1, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(10)]
+                    on_press:
+                        app.root.current = "Contatos"
+                        root.open_menu()
+
+<TelaInicial>:
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: "[color=#89CFF0]LTS[/color][color=#FFFFFF]app[/color]"  # LTS em azul e app em branco
+            markup: True  # Habilita o uso de tags de formatação
+            font_name: 'fonts/NekaLaurent.ttf'
+            color: 1, 1, 1, 1  # Cor padrão (não afeta o texto com tags)
+            font_size: dp(30)
+            size_hint: None, None
+            size: self.texture_size
+            pos_hint: {"center_x": 0.5, "top": 0.98}  # Ajuste para centralizar melhor
+
+        LogoImage:
+            source: 'midia/logoLTS.png'
+            size_hint: 0.7, 0.36
+            pos_hint: {'center_x': 0.5, 'top': 0.9}
+
+        GridLayout:
+            cols: 2
+            spacing: dp(12)
+            padding: dp(20)
+            size_hint: 1, None
+            row_default_height: dp(140)
+            row_force_default: True
+            height: self.minimum_height
+            pos_hint: {"top": 0.52}
+
+            ButtonCustom:
+                img_source: 'midia/calculadora1.png'
+                text_label: "Cálculos\nde Soldagem"
+                on_press: app.root.current = "CalculosdeSoldagem"
+
+            ButtonCustom:
+                img_source: 'midia/simbologia_de_soldagem.png'
+                text_label: "Simbologia\nde Soldagem"
+                on_press: app.root.current = "SimbologiadeSoldagem"
+
+            ButtonCustom:
+                img_source: 'midia/conversorUni.jpg'
+                text_label: "Conversor\nde Unidades"
+                on_press: app.root.current = "ConversordeUnidades"
+
+            ButtonCustom:
+                img_source: 'midia/sobre.png'
+                text_label: "Sobre o\nLTS"
+                on_press: app.root.current = "SobreoLTS"
+        Label:
+            text: "Desenvolvido no Laboratório de Tecnologia da Soldagem  da UFSC Joinville"
+            font_size: dp(12)
+            color: 1, 1, 1, 0.5  # Branco com leve transparência
+            size_hint: None, None
+            size: self.texture_size
+            pos_hint: {"center_x": 0.5, "y": 0.01}
